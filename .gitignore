@@ -1,0 +1,12 @@
+# 构建产物（build.sh 会重新生成）
+build/
+.build/
+
+# macOS
+.DS_Store
+
+# Xcode / SwiftPM（备用，本项目用 swiftc 直编）
+xcuserdata/
+*.xcodeproj
+.swiftpm/
+DerivedData/
