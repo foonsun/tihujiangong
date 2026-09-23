@@ -243,15 +243,21 @@ enum PelicanArt {
             hg.fill(Path(ellipseIn: CGRect(x: 0, y: 2, width: 7, height: 4.5)),
                     with: .color(Color(red: 1, green: 0.5, blue: 0.55).opacity(0.4)))
         }
-        // 体温计
+        // 体温计（红色水银泡在嘴边、白玻璃杆朝外——别画成叼烟）
         if d.symptoms.contains(.thermometer) {
+            let mx = mouthLocal.x, my = mouthLocal.y
             var p = Path()
-            p.move(to: mouthLocal)
-            p.addLine(to: CGPoint(x: mouthLocal.x + 12, y: mouthLocal.y - 8))
-            hg.stroke(p, with: .color(.white), style: StrokeStyle(lineWidth: 3, lineCap: .round))
-            let tipR = CGRect(x: mouthLocal.x + 9, y: mouthLocal.y - 10.5, width: 5, height: 5)
-            hg.fill(Path(ellipseIn: tipR), with: .color(red))
-            hg.stroke(Path(ellipseIn: tipR), with: .color(.white), lineWidth: 1)
+            p.move(to: CGPoint(x: mx + 1, y: my - 0.5))
+            p.addLine(to: CGPoint(x: mx + 15, y: my - 8))
+            hg.stroke(p, with: .color(.white), style: StrokeStyle(lineWidth: 3.2, lineCap: .round))
+            // 水银柱（靠嘴一端）
+            var m = Path()
+            m.move(to: CGPoint(x: mx + 2.5, y: my - 1.2))
+            m.addLine(to: CGPoint(x: mx + 8, y: my - 4.2))
+            hg.stroke(m, with: .color(red), style: StrokeStyle(lineWidth: 1.8, lineCap: .round))
+            // 红色水银泡（叼着的一端）
+            hg.fill(Path(ellipseIn: CGRect(x: mx - 2.8, y: my - 2.3, width: 5.6, height: 5.6)),
+                    with: .color(red))
         }
         // 流鼻涕
         if d.hpState == .sick {
