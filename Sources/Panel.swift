@@ -193,7 +193,8 @@ final class PanelController: NSObject, NSApplicationDelegate {
     }
 
     @objc func switchAnimal(_ sender: NSMenuItem) {
-        guard let a = sender.representedObject as? Animal, a != state.animal else { return }
+        guard let raw = sender.representedObject as? String,
+              let a = Animal(rawValue: raw), a != state.animal else { return }
         state.animal = a
         saveState()
         updateMenu()
