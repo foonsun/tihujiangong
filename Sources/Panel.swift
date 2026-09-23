@@ -192,6 +192,13 @@ final class PanelController: NSObject, NSApplicationDelegate {
         saveState()
     }
 
+    @objc func switchAnimal(_ sender: NSMenuItem) {
+        guard let a = sender.representedObject as? Animal, a != state.animal else { return }
+        state.animal = a
+        saveState()
+        updateMenu()
+    }
+
     @objc func toggleMute() {
         state.muted.toggle()
         sounds.muted = state.muted
@@ -208,7 +215,7 @@ final class PanelController: NSObject, NSApplicationDelegate {
 
     private func setupStatusItem() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        statusItem.button?.title = "🦩"
+        statusItem.button?.title = state.animal.emoji
         let menu = NSMenu()
         hpMenuItem = NSMenuItem(title: "HP", action: nil, keyEquivalent: "")
         hpMenuItem.isEnabled = false
@@ -216,6 +223,18 @@ final class PanelController: NSObject, NSApplicationDelegate {
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "📊 打开统计", action: #selector(openStats), keyEquivalent: ""))
         menu.addItem(NSMenuItem(title: "🚶 起来休息", action: #selector(startBreakMenu), keyEquivalent: ""))
+        // 🐾 换宠物（鹈鹕 + 十二生肖）
+        let petItem = NSMenuItem(title: "🐾 换宠物", action: nil, keyEquivalent: "")
+        let petMenu = NSMenu()
+        for a in Animal.allCases {
+            let it = NSMenuItem(title: "\(a.emoji) \(a.name)",
+                                action: #selector(switchAnimal(_:)), keyEquivalent: "")
+            it.representedObject = a.rawValue
+            it.target = self
+            petMenu.addItem(it)
+        }
+        petItem.submenu = petMenu
+        menu.addItem(petItem)
         hospitalMenuItem = NSMenuItem(title: "🏥 免费住院（今日）", action: #selector(doHospital), keyEquivalent: "")
         menu.addItem(hospitalMenuItem)
         muteMenuItem = NSMenuItem(title: "🔊 声音：开", action: #selector(toggleMute), keyEquivalent: "")
@@ -259,6 +278,17 @@ final class PanelController: NSObject, NSApplicationDelegate {
 
         let lt = s.loginItemEnabled ? "🚀 开机自启：开" : "🚀 开机自启：关"
         if loginMenuItem.title != lt { loginMenuItem.title = lt }
+
+        // 状态栏图标 = 当前动物
+        let emoji = s.animal.emoji
+        if statusItem.button?.title != emoji { statusItem.button?.title = emoji }
+
+        // 「换宠物」子菜单勾选
+        if let petMenu = statusItem.menu?.item(withTitle: "🐾 换宠物")?.submenu {
+            for it in petMenu.items {
+                it.state = (it.representedObject as? String) == s.animal.rawValue ? .on : .off
+            }
+        }
     }
 
     // MARK: 主循环
@@ -400,16 +430,26 @@ final class PanelController: NSObject, NSApplicationDelegate {
             ("away", PelicanDraw(hpState: .normal, mood: .none, pose: .standing, away: true))
         ]
         for (name, d) in poses {
-            let host = NSHostingView(rootView: PelicanView(draw: d)
-                .frame(width: 220, height: 150))
-            host.frame = NSRect(x: 0, y: 0, width: 220, height: 150)
-            host.layoutSubtreeIfNeeded()
-            guard let rep = host.bitmapImageRepForCachingDisplay(in: host.bounds) else { continue }
-            host.cacheDisplay(in: host.bounds, to: rep)
-            if let png = rep.representation(using: .png, properties: [:]) {
-                try? png.write(to: dir.appendingPathComponent(name + ".png"))
-            }
+            renderShot(d, to: dir.appendingPathComponent(name + ".png"))
+        }
+        // 每种动物各一张（元气站姿），方便核对画风
+        for a in Animal.allCases {
+            var d = PelicanDraw(hpState: .energetic, mood: .none, pose: .standing)
+            d.animal = a
+            renderShot(d, to: dir.appendingPathComponent("a_\(a.rawValue).png"))
         }
         NSWorkspace.shared.open(dir)
+    }
+
+    private func renderShot(_ d: PelicanDraw, to url: URL) {
+        let host = NSHostingView(rootView: PelicanView(draw: d)
+            .frame(width: 220, height: 150))
+        host.frame = NSRect(x: 0, y: 0, width: 220, height: 150)
+        host.layoutSubtreeIfNeeded()
+        guard let rep = host.bitmapImageRepForCachingDisplay(in: host.bounds) else { return }
+        host.cacheDisplay(in: host.bounds, to: rep)
+        if let png = rep.representation(using: .png, properties: [:]) {
+            try? png.write(to: url)
+        }
     }
 }

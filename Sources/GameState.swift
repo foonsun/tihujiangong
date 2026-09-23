@@ -30,6 +30,47 @@ enum HPState: Int, Codable, Equatable {
 
 enum Mood: Equatable { case none, angry, happy }
 
+/// 监工动物：老朋友鹈鹕 + 十二生肖
+enum Animal: String, CaseIterable, Codable {
+    case pelican, rat, ox, tiger, rabbit, dragon, snake, horse, goat, monkey, rooster, dog, pig
+
+    var name: String {
+        switch self {
+        case .pelican: return "鹈鹕"
+        case .rat:     return "小老鼠"
+        case .ox:      return "小牛"
+        case .tiger:   return "小老虎"
+        case .rabbit:  return "小兔子"
+        case .dragon:  return "小青龙"
+        case .snake:   return "小蛇"
+        case .horse:   return "小马"
+        case .goat:    return "小羊"
+        case .monkey:  return "小猴子"
+        case .rooster: return "小公鸡"
+        case .dog:     return "小狗"
+        case .pig:     return "小猪"
+        }
+    }
+
+    var emoji: String {
+        switch self {
+        case .pelican: return "🦩"
+        case .rat:     return "🐀"
+        case .ox:      return "🐂"
+        case .tiger:   return "🐯"
+        case .rabbit:  return "🐰"
+        case .dragon:  return "🐉"
+        case .snake:   return "🐍"
+        case .horse:   return "🐴"
+        case .goat:    return "🐐"
+        case .monkey:  return "🐵"
+        case .rooster: return "🐓"
+        case .dog:     return "🐶"
+        case .pig:     return "🐷"
+        }
+    }
+}
+
 enum Symptom: String, Codable, CaseIterable {
     case bandage, thermometer, shiver, dizzy, cough
 }
@@ -91,6 +132,7 @@ final class GameState: ObservableObject {
     @Published var bandageUntil = Date.distantPast   // 住院后的绷带特效
     @Published var symptoms: [Symptom] = []
     @Published var walk: WalkPhase = .idle
+    @Published var animal: Animal = .pelican
     @Published var muted = false
     @Published var idleSeconds: Double = 0
     @Published var windowOriginX: Double = 0
@@ -253,6 +295,8 @@ final class GameState: ObservableObject {
         var symptoms: [Symptom]
         var dateKey: String
         var panelOrigin: [Double]
+        /// 可选：旧版 state.json 没有该字段（默认鹈鹕）
+        var animal: Animal?
     }
 
     func snapshot(origin: [Double]) -> Snapshot {
@@ -264,7 +308,8 @@ final class GameState: ObservableObject {
                         muted: muted,
                         symptoms: symptoms,
                         dateKey: dateKey,
-                        panelOrigin: origin)
+                        panelOrigin: origin,
+                        animal: animal)
     }
 
     func restore(_ s: Snapshot) {
@@ -273,6 +318,7 @@ final class GameState: ObservableObject {
         daily = s.daily
         muted = s.muted
         symptoms = s.symptoms
+        animal = s.animal ?? .pelican
         lastSeen = s.lastSeen
         dateKey = Self.key(for: Date())
         // 关闭期间的补课掉血：上限 60 分钟，按 -2/分
@@ -293,6 +339,7 @@ final class GameState: ObservableObject {
 
     func baseDraw() -> PelicanDraw {
         var d = PelicanDraw(hpState: hpState, mood: mood, pose: .standing)
+        d.animal = animal
         d.symptoms = symptoms
         d.showBandage = Date() < bandageUntil
         d.away = away

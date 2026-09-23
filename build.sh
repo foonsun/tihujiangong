@@ -12,12 +12,7 @@ python3 make_sounds.py "$APP/Contents/Resources"
 swiftc -O \
   -module-cache-path .build/ModuleCache \
   -o "$APP/Contents/MacOS/PelicanNanny" \
-  Sources/main.swift \
-  Sources/GameState.swift \
-  Sources/Sounds.swift \
-  Sources/PelicanArt.swift \
-  Sources/Views.swift \
-  Sources/Panel.swift \
+  Sources/*.swift \
   -framework AppKit -framework SwiftUI -framework AVFoundation
 
 cp Info.plist "$APP/Contents/Info.plist"

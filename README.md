@@ -1,7 +1,8 @@
 # 🦩 鹈鹕监工（Pelican Nanny）
 
 菜单栏常驻的久坐监工小窗：你坐着，它就掉血；你起来休息，它就回血；
-休息时偷摸动电脑——被抓包。老朋友鹈鹕（`pelican-ride.html` 那只）出山当监工。
+休息时偷摸动电脑——被抓包。老朋友鹈鹕（`pelican-ride.html` 那只）出山当监工，
+十二生肖也能上岗，菜单栏「🐾 换宠物」一键切换。
 
 ## 运行
 
@@ -13,7 +14,7 @@ open build/PelicanNanny.app
 
 构建产物：`build/PelicanNanny.app`（自包含，可拷到 `~/Applications`）。
 状态存于 `~/Library/Application Support/PelicanNanny/state.json`（HP、连续久坐、
-每日统计、7 天历史、窗口位置、静音开关）。
+每日统计、7 天历史、窗口位置、静音开关、当前宠物）。
 
 ## 玩法 / 规则
 
@@ -32,8 +33,10 @@ open build/PelicanNanny.app
   （午饭不受罚；鹈鹕头上飘个「？」）。
 - **🏥 免费住院**：每天一次，直接回满 + 绷带特效 20 秒。
 - **📊 统计**：今日久坐/深度久坐/真休息/抓包次数/HP 区间/住院状态 + 最近 7 天表格。
-- **菜单栏 🦩**：实时 HP、打开统计、起来休息、免费住院、声音开关、
-  隐藏/显示小窗、开机自启、保存姿势截图（调试）、退出。
+- **🐾 换宠物**（菜单栏）：老朋友鹈鹕 + 十二生肖（鼠牛虎兔龙蛇马羊猴鸡狗猪），
+  共 13 位监工可选；切换后小窗/统计标题与菜单栏图标同步更换，选择会持久化。
+- **菜单栏（当前动物 emoji）**：实时 HP、打开统计、起来休息、免费住院、
+  声音开关、隐藏/显示小窗、开机自启、保存姿势截图（调试）、退出。
 
 ## 交互
 
@@ -46,14 +49,15 @@ open build/PelicanNanny.app
 - 纯 AppKit + SwiftUI，无 Xcode 工程；`swiftc -O` 直编。
 - 空闲检测用 `CGEventSource.secondsSinceLastEventType(.hidSystemState,
   kCGAnyInputEventType)` —— 系统级表，**无需辅助功能/输入监控权限**。
-- 鹈鹕全部代码绘制（SwiftUI Canvas + TimelineView），无图片素材；
-  配色沿用 `pelican-ride.html`（白身 #fff、橙嘴 #f9a825、喉囊 #f9b234、
-  橙腿 #e08a00）。
+- 13 位监工（鹈鹕 + 十二生肖）全部代码绘制（SwiftUI Canvas + TimelineView），
+  无图片素材。共享框架统一处理眼睛/鼻涕/绷带/爱心/生气/毯子等状态特效，
+  每种动物一个独立文件 `Sources/ZodiacXxx.swift`（鹈鹕在 `PelicanArt.swift`）。
+  配色沿用 `pelican-ride.html`（白身 #fff、橙嘴 #f9a825、喉囊 #f9b234、橙腿 #e08a00）。
 - 音效为 `make_sounds.py` 合成的 6 个 WAV（22050Hz 单声道 16-bit）。
 - 浮动面板：`NSPanel(.nonactivatingPanel)` + `.screenSaver` 层级 +
   `.fullScreenAuxiliary`，`LSUIElement` 无 Dock 图标。
 
 ## 调试
 
-菜单栏「📸 保存姿势截图」离屏渲染 12 个姿势到 `/tmp/pelican-shots/`
-（启动参数 `--shots` 也可触发）。
+菜单栏「📸 保存姿势截图」离屏渲染 12 个鹈鹕姿势 + 13 只动物各一张到
+`/tmp/pelican-shots/`（启动参数 `--shots` 也可触发）。

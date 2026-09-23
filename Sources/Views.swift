@@ -45,7 +45,7 @@ struct PanelCard: View {
 
         VStack(spacing: 7) {
             HStack(spacing: 6) {
-                Text("🦩 鹈鹕监工")
+                Text("\(state.animal.emoji) \(state.animal.name)监工")
                     .font(.system(size: 13, weight: .bold, design: .rounded))
                     .foregroundColor(Color(red: 0.20, green: 0.27, blue: 0.35))
                 Spacer()
@@ -167,7 +167,7 @@ struct StatsView: View {
         let days = Self.last7Days
 
         VStack(alignment: .leading, spacing: 10) {
-            Text("🦩 鹈鹕监工 · 统计")
+            Text("\(state.animal.emoji) \(state.animal.name)监工 · 统计")
                 .font(.system(size: 15, weight: .bold, design: .rounded))
 
             VStack(spacing: 8) {
@@ -220,7 +220,7 @@ struct StatsView: View {
 
             Spacer(minLength: 4)
 
-            Text("规则：坐着每分钟 −2 HP；连续坐满 45 分钟衰减 ×2。点「起来休息」鹈鹕出门溜达、回血 +20/分，回满即休息成功；休息时动鼠标/键盘会被抓包（回血只算 30%、再 −5 HP，鹈鹕生气 30 秒）。离开电脑超过 10 分钟不掉血也不回血；每天可免费住院一次直接回满。")
+            Text("规则：坐着每分钟 −2 HP；连续坐满 45 分钟衰减 ×2。点「起来休息」，监工出门溜达、回血 +20/分，回满即休息成功；休息时动鼠标/键盘会被抓包（回血只算 30%、再 −5 HP，监工生气 30 秒）。离开电脑超过 10 分钟不掉血也不回血；每天可免费住院一次直接回满。菜单栏「换宠物」可在鹈鹕与十二生肖之间切换。")
                 .font(.system(size: 10.5, design: .rounded))
                 .foregroundColor(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
