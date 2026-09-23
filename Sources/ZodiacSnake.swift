@@ -7,22 +7,35 @@ extension PelicanArt {
         let outline = Color(red: 0.42, green: 0.62, blue: 0.36)
         let bodyC = Color(red: 0.55, green: 0.78, blue: 0.45)
         let bellyC = Color(red: 0.85, green: 0.93, blue: 0.70)
-        let wobble = sin(t * 2) * 1.5
+        let wobble = sin(t * 2) * 1.2
 
-        // 盘绕的粗身体（无腿）
-        var coil = Path()
-        coil.move(to: CGPoint(x: -18, y: 16))
-        coil.addQuadCurve(to: CGPoint(x: 2, y: 26), control: CGPoint(x: -24, y: 28))
-        coil.addQuadCurve(to: CGPoint(x: 20, y: 10), control: CGPoint(x: 12, y: 30))
-        coil.addQuadCurve(to: CGPoint(x: 2, y: -6), control: CGPoint(x: 30, y: 2))
-        coil.addQuadCurve(to: CGPoint(x: -14, y: 6), control: CGPoint(x: -6, y: -14))
-        coil.addQuadCurve(to: CGPoint(x: -2, y: 14), control: CGPoint(x: -20, y: -2))
-        coil.addLine(to: CGPoint(x: 26, y: -14 + wobble))
-        c.stroke(coil, with: .color(bodyC), style: StrokeStyle(lineWidth: 15, lineCap: .round, lineJoin: .round))
-        c.stroke(coil, with: .color(bellyC), style: StrokeStyle(lineWidth: 6, lineCap: .round, lineJoin: .round))
+        // 盘绕身体：三层同心圈（真正的蛇盘姿态）
+        let coils: [(rect: CGRect, w: CGFloat)] = [
+            (CGRect(x: -25, y: -2, width: 46, height: 32), 13),
+            (CGRect(x: -18, y: 3, width: 33, height: 24), 11),
+            (CGRect(x: -12, y: 7, width: 21, height: 16), 9)
+        ]
+        var cg = c
+        cg.translateBy(x: 0, y: wobble * 0.5)
+        for co in coils {
+            cg.stroke(Path(ellipseIn: co.rect), with: .color(bodyC),
+                      style: StrokeStyle(lineWidth: co.w, lineJoin: .round))
+            cg.stroke(Path(ellipseIn: co.rect), with: .color(bellyC),
+                      style: StrokeStyle(lineWidth: co.w * 0.38, lineJoin: .round))
+        }
+        // 颈部：从内圈顶部伸到头
+        var neck = Path()
+        neck.move(to: CGPoint(x: 0, y: 6))
+        neck.addQuadCurve(to: CGPoint(x: 21, y: -16), control: CGPoint(x: 16, y: 0))
+        cg.stroke(neck, with: .color(bodyC), style: StrokeStyle(lineWidth: 11, lineCap: .round))
+        cg.stroke(neck, with: .color(bellyC), style: StrokeStyle(lineWidth: 4.5, lineCap: .round))
         if let (col, a) = bodyTint(d) {
-            c.fill(Path(ellipseIn: CGRect(x: -24, y: -10, width: 52, height: 42)),
-                   with: .color(col.opacity(a * 0.8)))
+            for co in coils {
+                cg.stroke(Path(ellipseIn: co.rect), with: .color(col.opacity(a * 0.7)),
+                          style: StrokeStyle(lineWidth: co.w, lineJoin: .round))
+            }
+            cg.stroke(neck, with: .color(col.opacity(a * 0.7)),
+                      style: StrokeStyle(lineWidth: 11, lineCap: .round))
         }
         // 头
         var hg = c

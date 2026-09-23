@@ -11,15 +11,16 @@ extension PelicanArt {
         // 彩色尾羽（4 根扇形）
         let tailCols: [Color] = [Color(red: 0.45, green: 0.62, blue: 0.85),
                                  Color(red: 0.50, green: 0.75, blue: 0.45),
-                                 red, footOrange]
-        let tailAngs: [Double] = [-55, -35, -15, 5]
+                                 red, footOrange,
+                                 Color(red: 0.55, green: 0.45, blue: 0.75)]
+        let tailAngs: [Double] = [-65, -45, -25, -5, 15]
         for (i, ang) in tailAngs.enumerated() {
             var tf = c
             tf.translateBy(x: -24, y: -4)
             tf.rotate(by: .degrees(ang + p.swing2 * 0.1))
             var fp = Path()
             fp.move(to: .zero)
-            fp.addQuadCurve(to: CGPoint(x: -30, y: -20), control: CGPoint(x: -30, y: -6))
+            fp.addQuadCurve(to: CGPoint(x: -34, y: -22), control: CGPoint(x: -34, y: -8))
             tf.stroke(fp, with: .color(tailCols[i]), style: StrokeStyle(lineWidth: 4.5, lineCap: .round))
         }
         // 身体
@@ -49,10 +50,11 @@ extension PelicanArt {
         var hg = c
         hg.translateBy(x: 30, y: -27)
         hg.rotate(by: Angle(radians: p.headTilt))
-        // 红鸡冠
-        hg.fill(Path(ellipseIn: CGRect(x: -9, y: -19, width: 7, height: 8)), with: .color(red))
-        hg.fill(Path(ellipseIn: CGRect(x: -2, y: -21, width: 8, height: 10)), with: .color(red))
-        hg.fill(Path(ellipseIn: CGRect(x: 6, y: -19, width: 7, height: 8)), with: .color(red))
+        // 红鸡冠（四瓣波浪，更像鸡冠）
+        hg.fill(Path(ellipseIn: CGRect(x: -10, y: -18, width: 7, height: 9)), with: .color(red))
+        hg.fill(Path(ellipseIn: CGRect(x: -4, y: -21, width: 8, height: 11)), with: .color(red))
+        hg.fill(Path(ellipseIn: CGRect(x: 3, y: -20, width: 7, height: 10)), with: .color(red))
+        hg.fill(Path(ellipseIn: CGRect(x: 9, y: -17, width: 6, height: 8)), with: .color(red))
         let headR = CGRect(x: -14, y: -14, width: 28, height: 28)
         hg.fill(Path(ellipseIn: headR), with: .color(bodyC))
         hg.stroke(Path(ellipseIn: headR), with: .color(outline), lineWidth: 1.5)

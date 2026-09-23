@@ -486,12 +486,13 @@ enum PelicanArt {
         }
         var pouch = Path()
         pouch.move(to: CGPoint(x: 12, y: -1))
-        pouch.addQuadCurve(to: CGPoint(x: 58, y: 2), control: CGPoint(x: 36, y: 13))
-        pouch.addQuadCurve(to: CGPoint(x: 12, y: -1), control: CGPoint(x: 24, y: -1))
+        pouch.addQuadCurve(to: CGPoint(x: 60, y: 3), control: CGPoint(x: 37, y: 24))
+        pouch.addQuadCurve(to: CGPoint(x: 12, y: -1), control: CGPoint(x: 26, y: 1))
         hg.fill(pouch, with: .color(pouchColor))
+        hg.stroke(pouch, with: .color(beakColor.opacity(0.45)), lineWidth: 1.2)
         var beakP = Path()
         beakP.move(to: CGPoint(x: 12, y: -5))
-        beakP.addLine(to: CGPoint(x: 58, y: 1))
+        beakP.addLine(to: CGPoint(x: 60, y: 1))
         beakP.addLine(to: CGPoint(x: 14, y: -1))
         beakP.closeSubpath()
         hg.fill(beakP, with: .color(beakColor))
@@ -503,8 +504,8 @@ enum PelicanArt {
             brow.addLine(to: CGPoint(x: 8, y: -9))
             hg.stroke(brow, with: .color(ink), style: StrokeStyle(lineWidth: 2, lineCap: .round))
         }
-        drawHeadSymptoms(&hg, t: t, d: d, mouthLocal: CGPoint(x: 58, y: 1))
-        return HeadInfo(center: CGPoint(x: 38, y: -30), radius: 15, mouthTip: CGPoint(x: 96, y: -29))
+        drawHeadSymptoms(&hg, t: t, d: d, mouthLocal: CGPoint(x: 60, y: 1))
+        return HeadInfo(center: CGPoint(x: 38, y: -30), radius: 15, mouthTip: CGPoint(x: 98, y: -29))
     }
 
     // MARK: 兔子（样板：长耳 + 粉鼻 + 毛球尾巴）
@@ -515,8 +516,11 @@ enum PelicanArt {
         let outline = Color(red: 0.80, green: 0.74, blue: 0.72)
         let bodyC = Color.white
 
-        c.fill(Path(ellipseIn: CGRect(x: -42, y: -3, width: 15, height: 14)), with: .color(bodyC))
-        c.stroke(Path(ellipseIn: CGRect(x: -42, y: -3, width: 15, height: 14)), with: .color(outline), lineWidth: 1.4)
+        // 棉绒尾巴（双球更蓬松）
+        c.fill(Path(ellipseIn: CGRect(x: -41, y: -5, width: 15, height: 15)), with: .color(bodyC))
+        c.stroke(Path(ellipseIn: CGRect(x: -41, y: -5, width: 15, height: 15)), with: .color(outline), lineWidth: 1.4)
+        c.fill(Path(ellipseIn: CGRect(x: -47, y: -1, width: 10, height: 10)), with: .color(bodyC))
+        c.stroke(Path(ellipseIn: CGRect(x: -47, y: -1, width: 10, height: 10)), with: .color(outline), lineWidth: 1.2)
         var bb = c
         bb.rotate(by: .degrees(-6))
         let bodyR = CGRect(x: -36, y: -22, width: 64, height: 50)
@@ -532,17 +536,17 @@ enum PelicanArt {
         var earL = c
         earL.translateBy(x: 22, y: -34)
         earL.rotate(by: .degrees(-10 + p.swing2 * 0.25))
-        let earLR = CGRect(x: -5, y: -24, width: 10, height: 28)
+        let earLR = CGRect(x: -5, y: -28, width: 10, height: 32)
         earL.fill(Path(ellipseIn: earLR), with: .color(bodyC))
         earL.stroke(Path(ellipseIn: earLR), with: .color(outline), lineWidth: 1.4)
-        earL.fill(Path(ellipseIn: CGRect(x: -2.6, y: -18, width: 5.2, height: 17)), with: .color(earInner))
+        earL.fill(Path(ellipseIn: CGRect(x: -2.6, y: -22, width: 5.2, height: 20)), with: .color(earInner))
         var earR = c
         earR.translateBy(x: 37, y: -34)
         earR.rotate(by: .degrees(9 + p.swing2 * 0.25))
-        let earRR = CGRect(x: -5, y: -24, width: 10, height: 28)
+        let earRR = CGRect(x: -5, y: -28, width: 10, height: 32)
         earR.fill(Path(ellipseIn: earRR), with: .color(bodyC))
         earR.stroke(Path(ellipseIn: earRR), with: .color(outline), lineWidth: 1.4)
-        earR.fill(Path(ellipseIn: CGRect(x: -2.6, y: -18, width: 5.2, height: 17)), with: .color(earInner))
+        earR.fill(Path(ellipseIn: CGRect(x: -2.6, y: -22, width: 5.2, height: 20)), with: .color(earInner))
         var hg = c
         hg.translateBy(x: 30, y: -26)
         hg.rotate(by: Angle(radians: p.headTilt))

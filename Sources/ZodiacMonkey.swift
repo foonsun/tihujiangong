@@ -15,8 +15,9 @@ extension PelicanArt {
         tg.rotate(by: .degrees(p.swing2 * 0.8))
         var tail = Path()
         tail.move(to: .zero)
-        tail.addQuadCurve(to: CGPoint(x: -12, y: -10), control: CGPoint(x: -18, y: 8))
-        tail.addQuadCurve(to: CGPoint(x: -16, y: 4), control: CGPoint(x: -4, y: -18))
+        tail.addQuadCurve(to: CGPoint(x: -13, y: -9), control: CGPoint(x: -19, y: 9))
+        tail.addQuadCurve(to: CGPoint(x: -3, y: -1), control: CGPoint(x: 2, y: -16))
+        tail.addQuadCurve(to: CGPoint(x: -9, y: -6), control: CGPoint(x: -14, y: -14))
         tg.stroke(tail, with: .color(bodyC), style: StrokeStyle(lineWidth: 4, lineCap: .round))
         // 身体
         let bb = c
@@ -46,6 +47,9 @@ extension PelicanArt {
         hg.fill(Path(ellipseIn: headR), with: .color(bodyC))
         hg.stroke(Path(ellipseIn: headR), with: .color(outline), lineWidth: 1.5)
         if let (col, a) = headTint(d) { hg.fill(Path(ellipseIn: headR), with: .color(col.opacity(a))) }
+        // 毛帽（头顶深色毛发，露出脸盘边缘）
+        hg.fill(Path(ellipseIn: CGRect(x: -16, y: -15, width: 33, height: 15)),
+                with: .color(Color(red: 0.70, green: 0.50, blue: 0.32)))
         // 浅色脸盘
         hg.fill(Path(ellipseIn: CGRect(x: -8, y: -10, width: 26, height: 22)), with: .color(faceC))
         // 呆毛

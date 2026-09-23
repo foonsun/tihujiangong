@@ -31,12 +31,12 @@ extension PelicanArt {
         // 白肚皮
         c.fill(Path(ellipseIn: CGRect(x: -18, y: -6, width: 34, height: 28)),
                with: .color(Color(red: 0.99, green: 0.97, blue: 0.92)))
-        // 背纹
-        for sx in [-24.0, -14.0, -4.0] {
+        // 背纹（5 道，更粗更弯）
+        for sx in [-26.0, -17.0, -8.0, 1.0, 10.0] {
             var s = Path()
-            s.move(to: CGPoint(x: sx, y: -18))
-            s.addQuadCurve(to: CGPoint(x: sx + 5, y: -6), control: CGPoint(x: sx + 7, y: -14))
-            c.stroke(s, with: .color(stripeC), style: StrokeStyle(lineWidth: 3, lineCap: .round))
+            s.move(to: CGPoint(x: sx, y: -19))
+            s.addQuadCurve(to: CGPoint(x: sx + 6, y: -4), control: CGPoint(x: sx + 8, y: -13))
+            c.stroke(s, with: .color(stripeC), style: StrokeStyle(lineWidth: 3.5, lineCap: .round))
         }
         // 腿
         if !bed {
@@ -60,13 +60,20 @@ extension PelicanArt {
         hg.fill(Path(ellipseIn: headR), with: .color(bodyC))
         hg.stroke(Path(ellipseIn: headR), with: .color(outline), lineWidth: 1.5)
         if let (col, a) = headTint(d) { hg.fill(Path(ellipseIn: headR), with: .color(col.opacity(a))) }
-        // 额纹
+        // 额纹（王字纹）
         for sx in [-8.0, -2.0, 4.0] {
             var s = Path()
             s.move(to: CGPoint(x: sx, y: -14))
             s.addLine(to: CGPoint(x: sx, y: -8))
-            hg.stroke(s, with: .color(stripeC), style: StrokeStyle(lineWidth: 2, lineCap: .round))
+            hg.stroke(s, with: .color(stripeC), style: StrokeStyle(lineWidth: 2.2, lineCap: .round))
         }
+        var kingBar = Path()
+        kingBar.move(to: CGPoint(x: -9, y: -11))
+        kingBar.addLine(to: CGPoint(x: 5, y: -11))
+        hg.stroke(kingBar, with: .color(stripeC), style: StrokeStyle(lineWidth: 2, lineCap: .round))
+        // 白眼圈（虎眼标志性浅纹，包住眼睛）
+        hg.fill(Path(ellipseIn: CGRect(x: -7, y: -9, width: 14, height: 8)),
+                with: .color(Color(red: 0.99, green: 0.97, blue: 0.92).opacity(0.9)))
         // 白吻 + 粉鼻 + 嘴
         hg.fill(Path(ellipseIn: CGRect(x: 4, y: -6, width: 18, height: 13)),
                 with: .color(Color(red: 0.99, green: 0.97, blue: 0.92)))

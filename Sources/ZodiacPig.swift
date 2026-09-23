@@ -21,7 +21,7 @@ extension PelicanArt {
         tg.stroke(curl, with: .color(darkPink), style: StrokeStyle(lineWidth: 2, lineCap: .round))
         // 超圆身体
         let bb = c
-        let bodyR = CGRect(x: -34, y: -20, width: 62, height: 50)
+        let bodyR = CGRect(x: -36, y: -20, width: 66, height: 50)
         bb.fill(Path(ellipseIn: bodyR), with: .color(bodyC))
         bb.stroke(Path(ellipseIn: bodyR), with: .color(outline), lineWidth: 1.5)
         if let (col, a) = bodyTint(d) { bb.fill(Path(ellipseIn: bodyR), with: .color(col.opacity(a))) }
@@ -39,25 +39,25 @@ extension PelicanArt {
         var hg = c
         hg.translateBy(x: 30, y: -27)
         hg.rotate(by: Angle(radians: p.headTilt))
-        // 折耳（画在头前）
-        var earL = Path()
-        earL.move(to: CGPoint(x: -12, y: -10))
-        earL.addLine(to: CGPoint(x: -16, y: -22))
-        earL.addLine(to: CGPoint(x: -4, y: -14))
-        earL.closeSubpath()
-        hg.fill(earL, with: .color(Color(red: 0.93, green: 0.58, blue: 0.62)))
-        hg.stroke(earL, with: .color(outline), lineWidth: 1.2)
-        var earR = Path()
-        earR.move(to: CGPoint(x: 4, y: -12))
-        earR.addLine(to: CGPoint(x: 6, y: -25))
-        earR.addLine(to: CGPoint(x: 12, y: -13))
-        earR.closeSubpath()
-        hg.fill(earR, with: .color(Color(red: 0.93, green: 0.58, blue: 0.62)))
-        hg.stroke(earR, with: .color(outline), lineWidth: 1.2)
         let headR = CGRect(x: -16, y: -14, width: 33, height: 29)
         hg.fill(Path(ellipseIn: headR), with: .color(bodyC))
         hg.stroke(Path(ellipseIn: headR), with: .color(outline), lineWidth: 1.5)
         if let (col, a) = headTint(d) { hg.fill(Path(ellipseIn: headR), with: .color(col.opacity(a))) }
+        // 耷拉折耳（盖在头两侧，画在头后）
+        var earL = Path()
+        earL.move(to: CGPoint(x: -13, y: -11))
+        earL.addQuadCurve(to: CGPoint(x: -15, y: -1), control: CGPoint(x: -19, y: -14))
+        earL.addQuadCurve(to: CGPoint(x: -5, y: -12), control: CGPoint(x: -7, y: -3))
+        earL.closeSubpath()
+        hg.fill(earL, with: .color(Color(red: 0.93, green: 0.58, blue: 0.62)))
+        hg.stroke(earL, with: .color(outline), lineWidth: 1.2)
+        var earR = Path()
+        earR.move(to: CGPoint(x: 5, y: -13))
+        earR.addQuadCurve(to: CGPoint(x: 10, y: -3), control: CGPoint(x: 13, y: -15))
+        earR.addQuadCurve(to: CGPoint(x: 14, y: -14), control: CGPoint(x: 13, y: -5))
+        earR.closeSubpath()
+        hg.fill(earR, with: .color(Color(red: 0.93, green: 0.58, blue: 0.62)))
+        hg.stroke(earR, with: .color(outline), lineWidth: 1.2)
         // 腮红
         hg.fill(Path(ellipseIn: CGRect(x: -10, y: 0, width: 7, height: 5)),
                 with: .color(Color(red: 1, green: 0.55, blue: 0.6).opacity(0.35)))

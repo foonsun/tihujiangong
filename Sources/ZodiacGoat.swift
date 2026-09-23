@@ -11,10 +11,12 @@ extension PelicanArt {
         let hornC = Color(red: 0.85, green: 0.78, blue: 0.62)
         let legC = Color(red: 0.80, green: 0.70, blue: 0.55)
 
-        // 蓬松羊毛（身体上缘小圆）
-        c.fill(Path(ellipseIn: CGRect(x: -30, y: -26, width: 26, height: 20)), with: .color(bodyC))
-        c.fill(Path(ellipseIn: CGRect(x: -10, y: -30, width: 28, height: 22)), with: .color(bodyC))
-        c.fill(Path(ellipseIn: CGRect(x: 10, y: -26, width: 24, height: 18)), with: .color(bodyC))
+        // 蓬松羊毛（身体上缘一排小圆，更蓬松）
+        c.fill(Path(ellipseIn: CGRect(x: -34, y: -22, width: 18, height: 16)), with: .color(bodyC))
+        c.fill(Path(ellipseIn: CGRect(x: -24, y: -27, width: 17, height: 16)), with: .color(bodyC))
+        c.fill(Path(ellipseIn: CGRect(x: -12, y: -29, width: 17, height: 17)), with: .color(bodyC))
+        c.fill(Path(ellipseIn: CGRect(x: 0, y: -28, width: 17, height: 16)), with: .color(bodyC))
+        c.fill(Path(ellipseIn: CGRect(x: 12, y: -24, width: 16, height: 14)), with: .color(bodyC))
         // 主身体
         let bb = c
         let bodyR = CGRect(x: -34, y: -20, width: 64, height: 50)
@@ -40,13 +42,13 @@ extension PelicanArt {
         hg.rotate(by: Angle(radians: p.headTilt))
         // 弯角（画在头前）
         var hornL = Path()
-        hornL.move(to: CGPoint(x: -12, y: -10))
-        hornL.addQuadCurve(to: CGPoint(x: -20, y: -18), control: CGPoint(x: -19, y: -10))
-        hg.stroke(hornL, with: .color(hornC), style: StrokeStyle(lineWidth: 4, lineCap: .round))
+        hornL.move(to: CGPoint(x: -11, y: -11))
+        hornL.addQuadCurve(to: CGPoint(x: -23, y: -16), control: CGPoint(x: -20, y: -21))
+        hg.stroke(hornL, with: .color(hornC), style: StrokeStyle(lineWidth: 4.5, lineCap: .round))
         var hornR = Path()
-        hornR.move(to: CGPoint(x: 8, y: -12))
-        hornR.addQuadCurve(to: CGPoint(x: 4, y: -24), control: CGPoint(x: 11, y: -22))
-        hg.stroke(hornR, with: .color(hornC), style: StrokeStyle(lineWidth: 4, lineCap: .round))
+        hornR.move(to: CGPoint(x: 8, y: -13))
+        hornR.addQuadCurve(to: CGPoint(x: 1, y: -27), control: CGPoint(x: 10, y: -24))
+        hg.stroke(hornR, with: .color(hornC), style: StrokeStyle(lineWidth: 4.5, lineCap: .round))
         // 垂耳（画在头前）
         var earL = hg
         earL.translateBy(x: -13, y: -4)
@@ -62,8 +64,9 @@ extension PelicanArt {
         hg.fill(Path(ellipseIn: headR), with: .color(faceC))
         hg.stroke(Path(ellipseIn: headR), with: .color(outline), lineWidth: 1.5)
         if let (col, a) = headTint(d) { hg.fill(Path(ellipseIn: headR), with: .color(col.opacity(a))) }
-        // 山羊胡
-        hg.fill(Path(ellipseIn: CGRect(x: 10, y: 10, width: 7, height: 6)), with: .color(bodyC))
+        // 山羊胡（两瓣胡须）
+        hg.fill(Path(ellipseIn: CGRect(x: 9, y: 10, width: 6, height: 9)), with: .color(bodyC))
+        hg.fill(Path(ellipseIn: CGRect(x: 13, y: 12, width: 5, height: 7)), with: .color(bodyC))
         // 鼻 + 嘴
         hg.fill(Path(ellipseIn: CGRect(x: 14, y: -3, width: 6, height: 4.5)), with: .color(nosePink))
         var mouth = Path()

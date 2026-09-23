@@ -48,13 +48,15 @@ extension PelicanArt {
         if let (col, a) = headTint(d) { hg.fill(Path(ellipseIn: headR), with: .color(col.opacity(a))) }
         // 垂耳（画在头后，盖住头边缘）
         var earL = hg
-        earL.translateBy(x: -14, y: -6)
-        earL.rotate(by: .degrees(15))
-        earL.fill(Path(ellipseIn: CGRect(x: -5, y: -8, width: 10, height: 22)), with: .color(earC))
+        earL.translateBy(x: -15, y: -5)
+        earL.rotate(by: .degrees(18))
+        earL.fill(Path(ellipseIn: CGRect(x: -5.5, y: -9, width: 11, height: 25)), with: .color(earC))
+        earL.stroke(Path(ellipseIn: CGRect(x: -5.5, y: -9, width: 11, height: 25)), with: .color(outline), lineWidth: 1.2)
         var earR = hg
-        earR.translateBy(x: 14, y: -6)
-        earR.rotate(by: .degrees(-15))
-        earR.fill(Path(ellipseIn: CGRect(x: -5, y: -8, width: 10, height: 22)), with: .color(earC))
+        earR.translateBy(x: 15, y: -5)
+        earR.rotate(by: .degrees(-18))
+        earR.fill(Path(ellipseIn: CGRect(x: -5.5, y: -9, width: 11, height: 25)), with: .color(earC))
+        earR.stroke(Path(ellipseIn: CGRect(x: -5.5, y: -9, width: 11, height: 25)), with: .color(outline), lineWidth: 1.2)
         // 吻部 + 黑鼻 + 嘴
         hg.fill(Path(ellipseIn: CGRect(x: 6, y: -6, width: 20, height: 14)), with: .color(muzzleC))
         hg.fill(Path(ellipseIn: CGRect(x: 17, y: -4, width: 7, height: 5.5)), with: .color(.black.opacity(0.85)))
@@ -65,6 +67,8 @@ extension PelicanArt {
         if p.mouthOpen || d.mood == .happy {
             hg.fill(Path(ellipseIn: CGRect(x: 16, y: 3, width: 6, height: 6)), with: .color(nosePink))
         }
+        // 浅色眉点（狗狗的眉斑）
+        hg.fill(Path(ellipseIn: CGRect(x: -3, y: -10, width: 6, height: 4)), with: .color(muzzleC))
         drawEye(hg, CGPoint(x: 0, y: -5), p.eyes, eyelid: bodyC)
         if d.mood == .angry {
             var brow = Path()
