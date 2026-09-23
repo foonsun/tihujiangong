@@ -46,7 +46,7 @@ enum Animal: String, CaseIterable, Codable {
         case .horse:   return "小马"
         case .goat:    return "小羊"
         case .monkey:  return "小猴子"
-        case .rooster: return "小公鸡"
+        case .rooster: return "小鸡"
         case .dog:     return "小狗"
         case .pig:     return "小猪"
         }

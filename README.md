@@ -4,6 +4,18 @@
 休息时偷摸动电脑——被抓包。老朋友鹈鹕（`pelican-ride.html` 那只）出山当监工，
 十二生肖也能上岗，菜单栏「🐾 换宠物」一键切换。
 
+## 监工阵容（13 位）
+
+| | | | |
+|:---:|:---:|:---:|:---:|
+| <img src="docs/pelican.png" width="150"><br>🦩 鹈鹕 · 老朋友 | <img src="docs/rat.png" width="150"><br>🐀 小老鼠 | <img src="docs/ox.png" width="150"><br>🐂 小牛 | <img src="docs/tiger.png" width="150"><br>🐯 小老虎 |
+| <img src="docs/rabbit.png" width="150"><br>🐰 小兔子 | <img src="docs/dragon.png" width="150"><br>🐉 小青龙 | <img src="docs/snake.png" width="150"><br>🐍 小蛇 | <img src="docs/horse.png" width="150"><br>🐴 小马 |
+| <img src="docs/goat.png" width="150"><br>🐐 小羊 | <img src="docs/monkey.png" width="150"><br>🐵 小猴子 | <img src="docs/rooster.png" width="150"><br>🐓 小鸡 | <img src="docs/dog.png" width="150"><br>🐶 小狗 |
+| <img src="docs/pig.png" width="150"><br>🐷 小猪 | | | |
+
+> 图片即游戏内真实画风（代码绘制、离屏渲染）；换宠物后小窗会画对应那位。
+> 重新生成：菜单栏「📸 保存姿势截图」或启动参数 `--shots`。
+
 ## 运行
 
 ```bash
