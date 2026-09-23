@@ -160,6 +160,10 @@ enum PelicanArt {
             mouthOpen = true
         }
         if d.mood == .angry { headTilt -= 0.12 }
+        // 咳嗽：头轻轻抖（不再从嘴边冒泡泡——那像抽烟）
+        if d.symptoms.contains(.cough) && d.hpState != .bedridden {
+            headTilt += sin(t * 11) * 0.05
+        }
         if walking {
             yOff = -3 * abs(sin(walkPhase))
             headTilt -= 0.05
@@ -337,17 +341,7 @@ enum PelicanArt {
                 sparkle(ctx, at: sp, s: 3.2, alpha: 0.9)
             }
         }
-        // 咳嗽气泡
-        if d.symptoms.contains(.cough) && d.hpState != .bedridden {
-            for i in 0..<2 {
-                let ph = fmod(t * 1.4 + Double(i) * 0.4, 1)
-                let pp = CGPoint(x: head.mouthTip.x + 14 + ph * 12, y: head.mouthTip.y - 2 - ph * 8)
-                let rr = 2.2 + ph * 3.5
-                ctx.fill(Path(ellipseIn: CGRect(x: pp.x - rr, y: pp.y - rr * 0.8,
-                                                width: rr * 2, height: rr * 1.6)),
-                         with: .color(.gray.opacity(0.35 * (1 - ph))))
-            }
-        }
+        // 咳嗽的视觉表现已改为头抖（见 pose），此处不再冒泡泡
         // 粉色毯子（卧床）
         if d.hpState == .bedridden {
             var g = ctx
