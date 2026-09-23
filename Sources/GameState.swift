@@ -154,11 +154,17 @@ final class GameState: ObservableObject {
 
     var hospitalizedToday: Bool { (daily[dateKey] ?? DailyStats()).hospitalized }
 
-    /// 离开电脑超过 10 分钟且不在休息中
-    var away: Bool { idleSeconds >= Self.presentMax && !inBreak }
+    /// 离开电脑超过 10 分钟且不在休息中（真休息结束后人还没回来也算离开）
+    var away: Bool {
+        if inBreak { return false }
+        if idleSeconds >= Self.presentMax { return true }
+        return breakEndedAt != nil
+    }
 
     private var lastTick: Date = Date()
     private var lastHPState: HPState = .energetic
+    /// 真休息结束的时刻：在用户回来（产生输入）之前，不恢复「坐下掉血」
+    var breakEndedAt: Date?
 
     private static let keyFormatter: DateFormatter = {
         let f = DateFormatter()
@@ -196,6 +202,7 @@ final class GameState: ObservableObject {
                 today.genuineBreaks += 1
                 consecutiveSittingMinutes = 0
                 deepSitting = false
+                breakEndedAt = now   // 人多半还在外面：回来前不掉血
                 events.append(.breakGenuine)
             } else if now.timeIntervalSince(grace) > 0,
                       idle < now.timeIntervalSince(grace) {
@@ -206,7 +213,11 @@ final class GameState: ObservableObject {
                 events.append(.breakCaught)
             }
         default:
-            if idle < Self.presentMax {
+            // 「在电脑前工作」= 最近 10 分钟内有输入，且（真休息结束后）人已经回来
+            let lastInput = now.addingTimeInterval(-idle)
+            let returned = breakEndedAt.map { lastInput >= $0 } ?? true
+            if idle < Self.presentMax && returned {
+                breakEndedAt = nil
                 // 在电脑前坐着：掉血
                 consecutiveSittingMinutes += dt / 60
                 today.sittingMinutes += dt / 60
