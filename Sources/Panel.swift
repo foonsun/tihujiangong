@@ -439,6 +439,29 @@ final class PanelController: NSObject, NSApplicationDelegate {
             d.animal = a
             renderShot(d, to: dir.appendingPathComponent("a_\(a.rawValue).png"))
         }
+        // 真实小窗 UI（示例数据：正常状态 HP 68、已坐 23 分钟），供 README 预览
+        let demo = GameState()
+        demo.hp = 68
+        demo.consecutiveSittingMinutes = 23
+        let cardHost = NSHostingView(rootView:
+            ZStack {
+                Color(red: 0.91, green: 0.93, blue: 0.96)
+                PanelCard(state: demo, controller: self)
+                    .shadow(color: Color.black.opacity(0.16), radius: 14, x: 0, y: 5)
+                    .padding(32)
+            }
+            .frame(width: PanelController.cardSize.width + 64,
+                   height: PanelController.cardSize.height + 64))
+        cardHost.frame = NSRect(x: 0, y: 0,
+                                width: PanelController.cardSize.width + 64,
+                                height: PanelController.cardSize.height + 64)
+        cardHost.layoutSubtreeIfNeeded()
+        if let rep = cardHost.bitmapImageRepForCachingDisplay(in: cardHost.bounds) {
+            cardHost.cacheDisplay(in: cardHost.bounds, to: rep)
+            if let png = rep.representation(using: .png, properties: [:]) {
+                try? png.write(to: dir.appendingPathComponent("card.png"))
+            }
+        }
         NSWorkspace.shared.open(dir)
     }
 
