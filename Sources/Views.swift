@@ -144,7 +144,7 @@ struct PanelCard: View {
 
     var sittingText: String {
         if state.inBreak { return "休息中 · 回血 +20/分 · 别动！" }
-        if state.away { return "你离开啦…（不掉血，也别玩太久）" }
+        if state.away { return "你离开啦…（回血中 +20/分）" }
         let m = Int(state.consecutiveSittingMinutes)
         if state.deepSitting { return "⚠️ 深度久坐 ×2 · 已连续坐 \(m) 分钟" }
         return "已坐 \(m) 分钟 · 坐满 45 分钟掉血 ×2"
@@ -220,7 +220,7 @@ struct StatsView: View {
 
             Spacer(minLength: 4)
 
-            Text("规则：坐着每分钟 −2 HP；连续坐满 45 分钟衰减 ×2。点「起来休息」，监工出门溜达、回血 +20/分，回满即休息成功；休息时动鼠标/键盘会被抓包（回血只算 30%、再 −5 HP，监工生气 30 秒）。离开电脑超过 10 分钟不掉血也不回血；每天可免费住院一次直接回满。菜单栏「换宠物」可在鹈鹕与十二生肖之间切换。")
+            Text("规则：坐着每分钟 −2 HP；连续坐满 45 分钟衰减 ×2。点「起来休息」，监工出门溜达、回血 +20/分，回满即休息成功；休息时动鼠标/键盘会被抓包（回血只算 30%、再 −5 HP，监工生气 30 秒）。离开电脑超过 10 分钟（无输入）按 +20/分 回血；每天可免费住院一次直接回满。菜单栏「换宠物」可在鹈鹕与十二生肖之间切换。")
                 .font(.system(size: 10.5, design: .rounded))
                 .foregroundColor(.secondary)
                 .fixedSize(horizontal: false, vertical: true)

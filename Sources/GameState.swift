@@ -225,8 +225,13 @@ final class GameState: ObservableObject {
                 if deepSitting { today.deepMinutes += dt / 60 }
                 let rate = Self.decayPerMin * (deepSitting ? Self.deepMultiplier : 1)
                 hp = max(0, hp - rate * dt / 60)
+            } else if idle >= Self.presentMax {
+                // 离开超过 10 分钟：重置连续久坐，并按休息速度回血
+                consecutiveSittingMinutes = 0
+                deepSitting = false
+                hp = min(100, hp + Self.recoveryPerMin * dt / 60)
             } else {
-                // 人离开了：不掉血不回血，重置连续久坐
+                // 真休息结束但人还没回来：暂停（不掉血，HP 已是满的）
                 consecutiveSittingMinutes = 0
                 deepSitting = false
             }

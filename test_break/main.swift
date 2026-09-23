@@ -1,49 +1,43 @@
 import Foundation
+import Darwin
+setvbuf(stdout, nil, _IONBF, 0)
 
-// 模拟：t=0 时 HP=60，点「起来休息」，离开 5 分钟（无任何输入），t=300 回来开始工作
 let t0 = Date(timeIntervalSinceReferenceDate: 1_000_000)
 func now(_ s: Double) -> Date { t0.addingTimeInterval(s) }
 
-let gs = GameState()
-gs.hp = 60
+func process(_ gs: GameState, _ t: Double, _ idle: Double) -> [GameEvent] {
+    gs.tick(now: now(t), idle: idle)
+}
 
-gs.startBreak()                                  // t=0 点按钮（此刻有输入）
-var _e = gs.tick(now: now(0.1), idle: 0.1)
-gs.finishWalkOut(now: now(0.28))                 // 0.28s 后走出卡片
-
+print("=== 场景1：点按钮休息 5 分钟（已有逻辑）===")
+let gs1 = GameState()
+gs1.hp = 60
+gs1.startBreak()
+var _e = gs1.tick(now: now(0.1), idle: 0.1)
+gs1.finishWalkOut(now: now(0.28))
 var walkInPending = -1.0
-func process(_ t: Double, _ idle: Double) {
-    var ev = gs.tick(now: now(t), idle: idle)
-    if walkInPending >= 0, t >= walkInPending {
-        gs.finishWalkIn(now: now(t), happy: true)
-        walkInPending = -1
-    }
-    for e in ev {
-        if case .breakGenuine = e {
-            gs.beginWalkIn(now: now(t), happy: true)
-            walkInPending = t + 1.78
-        }
-    }
+func proc1(_ t: Double, _ idle: Double) {
+    var ev = gs1.tick(now: now(t), idle: idle)
+    if walkInPending >= 0, t >= walkInPending { gs1.finishWalkIn(now: now(t), happy: true); walkInPending = -1 }
+    for e in ev { if case .breakGenuine = e { gs1.beginWalkIn(now: now(t), happy: true); walkInPending = t + 1.78 } }
 }
+for t in stride(from: 0.5, through: 299.5, by: 0.5) { proc1(t, t) }
+proc1(300.0, 0)
+for t in stride(from: 300.5, through: 305.0, by: 0.5) { proc1(t, t - 300.0) }
+print(String(format: "回来时 hp=%.2f（应≈100），真休息=%d", gs1.hp, gs1.today.genuineBreaks))
 
-print("== 离开期间（没按 10 分钟离开线）==")
-for t in stride(from: 0.5, through: 299.5, by: 0.5) {
-    process(t, t)                                // 最后一次输入是 t=0
+print("=== 场景2：没点按钮，离开 20 分钟（新逻辑：离开≥10分钟回血）===")
+let gs2 = GameState()
+gs2.hp = 50
+// 一直无输入（最后一次输入在 t=0），全程没点按钮
+for t in stride(from: 0.5, through: 1200.0, by: 5.0) {
+    _ = process(gs2, t, t)
     switch t {
-    case 10..<11, 60..<61, 122..<123, 150..<151, 200..<201, 299..<300:
-        print(String(format: "t=%5.1f min  hp=%6.2f  连续坐=%5.2f  away=%@", t, gs.hp, gs.consecutiveSittingMinutes, gs.away ? "是" : "否"))
+    case 595..<600, 1195..<1200:
+        print(String(format: "t=%4.0fmin  hp=%5.1f  连续坐=%4.1f  away=%@", t, gs2.hp, gs2.consecutiveSittingMinutes, gs2.away ? "是" : "否"))
     default: break
     }
 }
-
-print("== t=300 回来开始工作 ==")
-process(300.0, 0)
-for t in stride(from: 300.5, through: 330.0, by: 0.5) {
-    process(t, t - 300.0)
-    switch t {
-    case 300..<301, 310..<311, 320..<321, 329..<330:
-        print(String(format: "t=%5.1f min  hp=%6.2f  连续坐=%5.2f  away=%@", t, gs.hp, gs.consecutiveSittingMinutes, gs.away ? "是" : "否"))
-    default: break
-    }
-}
-print("真休息次数:", gs.today.genuineBreaks, " 抓包次数:", gs.today.caughtBreaks)
+// t=1200s(20min) 回来
+_ = process(gs2, 1205.0, 0)
+print(String(format: "回来时 hp=%.2f（前10min坐着掉血、后10min回血），久坐=%.1f 分钟", gs2.hp, gs2.consecutiveSittingMinutes))
